@@ -44,6 +44,10 @@ public abstract class BotEntry {
         this.connected.set(true);
     }
 
+    public BotConfigEntry getConfigEntry(){
+        return this.configEntry;
+    }
+
     private void doInitCacheFolder(BotConfiguration configuration,BotConfigEntry entry){
         File folder = new File(DATA_FOLDER,"caches-"+entry.getQid());
         if (!folder.exists()){

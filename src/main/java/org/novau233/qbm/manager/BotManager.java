@@ -10,8 +10,11 @@ import org.apache.logging.log4j.Logger;
 import org.novau233.qbm.bot.BotConfigEntry;
 import org.novau233.qbm.bot.BotEntry;
 import org.novau233.qbm.processors.CommandProcessor;
+import org.novau233.qbm.utils.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -37,13 +40,11 @@ public class BotManager {
                 System.exit(0);
             }
             FileInputStream stream = new FileInputStream(file);
-            byte[] buffer = new byte[stream.available()];
-            stream.read(buffer);
+            byte[] buffer = Utils.readInputStreamToByte(stream);
+            stream.close();
             BotConfigEntryArray array = BotConfigEntryArray.botConfigEntryArrayFromString(new String(buffer));
-            CountDownLatch latch = new CountDownLatch(array.entries.length);
-            for (BotConfigEntry configEntry : array.entries){
-                executor.execute(()->{
-                    try{
+            CompletableFuture.allOf(Arrays.stream(array.entries)
+                    .map(value->CompletableFuture.supplyAsync(()->{
                         BotEntry entry = new BotEntry() {
                             @Override
                             public void processEvent(Event event) {
@@ -56,18 +57,17 @@ public class BotManager {
                                 }
                             }
                         };
-                        entry.runBot(configEntry);
-                        bots.add(entry.getBot());
-                        entries.add(entry);
-                        botEntries.add(configEntry);
-                    }finally {
-                        latch.countDown();
-                    }
-                });
-            }
-            latch.await();
-            stream.close();
-            ((ThreadPoolExecutor)executor).shutdownNow();
+                        entry.runBot(value);
+                        return entry;
+                    }).whenComplete((value1,cause)->{
+                        if (cause==null){
+                            bots.add(value1.getBot());
+                            entries.add(value1);
+                            botEntries.add(value1.getConfigEntry());
+                        }else{
+                            cause.printStackTrace();;
+                        }
+                    })).toArray(CompletableFuture[]::new)).join();
             multiSender.doInit(entries);
         }catch (Exception e){
             LOGGER.error(e);
