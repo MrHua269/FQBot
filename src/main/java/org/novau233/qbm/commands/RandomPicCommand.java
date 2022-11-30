@@ -1,12 +1,17 @@
 package org.novau233.qbm.commands;
 
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.*;
 import org.apache.logging.log4j.LogManager;
 import org.novau233.qbm.manager.BotManager;
 import org.novau233.qbm.utils.SeXResponse;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 
 public class RandomPicCommand implements Command{
     @Override
@@ -40,18 +45,8 @@ public class RandomPicCommand implements Command{
             if (response.getData().length > 0){
                 SeXResponse.Data[] dataArray = response.getData();
                 for (SeXResponse.Data data : dataArray){
-                    final StringBuilder builder1 = new StringBuilder();
-                    builder.add("==========================================\n");
-                    builder.add("[title]标题:"+data.title+"\n");
-                    builder.add("[author]作者:"+data.author+"\n");
-                    builder.add("[update time]上传时间:"+data.updateDate+"\n");
-                    for (String s : data.tags){
-                        builder1.append(s).append(",");
-                    }
-                    builder.add("[tags]标签:"+builder1.toString()+"\n");
-                    builder.add("R18:"+data.r18+"\n");
-                    builder.add(data.urls.original);
-                    builder.add("\n=========================================");
+                    ByteArrayInputStream stream = new ByteArrayInputStream(data.urls.getBytes());
+                    Contact.sendImage(target,stream);
                 }
             }else{
                 builder.add("指定图片未找到");
@@ -60,6 +55,5 @@ public class RandomPicCommand implements Command{
             builder.add("API Time out.Please try again"+"\n");
             builder.add("API连接超时,请重试");
         }
-        BotManager.multiSender.send(builder.build(), target.getId());
     }
 }

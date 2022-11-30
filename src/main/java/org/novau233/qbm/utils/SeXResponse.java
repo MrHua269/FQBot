@@ -57,6 +57,7 @@ public class SeXResponse {
         public String original;
         private static final AtomicInteger currentId = new AtomicInteger();
         private static final File CACHE = new File("ACaches");
+
         static{
             if (!CACHE.exists()){
                 CACHE.mkdirs();
@@ -64,7 +65,29 @@ public class SeXResponse {
             currentId.set(CACHE.listFiles().length+1);
         }
 
-        public void save(){
+        public static File getCache(){
+            return CACHE;
+        }
+
+        public File save() {
+            try {
+                File file = new File(CACHE, currentId.getAndIncrement() + ".jpg");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                FileOutputStream stream = new FileOutputStream(file);
+                stream.write(getBytes());
+                stream.flush();
+                stream.close();
+                LogManager.getLogger().info("saved pic:{}", file.getPath());
+                return file;
+            } catch (Exception e) {
+                LogManager.getLogger().error(e);
+            }
+            return null;
+        }
+
+        public byte[] getBytes(){
             try{
                 final URL url = new URL(this.original);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -72,22 +95,21 @@ public class SeXResponse {
                 connection.setReadTimeout(3000);
                 connection.setConnectTimeout(3000);
                 connection.connect();
-                if (connection.getResponseCode() == 200){
-                    byte[] buffer = readInputStream(connection.getInputStream());
-                    connection.disconnect();
-                    File file = new File(CACHE,currentId.getAndIncrement()+".jpg");
-                    if (!file.exists()){
-                        file.createNewFile();
+                try{
+                    if (connection.getResponseCode() == 200){
+                        return readInputStream(connection.getInputStream());
                     }
-                    FileOutputStream stream = new FileOutputStream(file);
-                    stream.write(buffer);
-                    stream.flush();
-                    stream.close();
-                    LogManager.getLogger().info("saved pic:{}",file.getPath());
+                }finally {
+                    connection.disconnect();
                 }
             }catch (Exception e){
-                LogManager.getLogger().error(e);
+                e.printStackTrace();
             }
+            return null;
+        }
+
+        public CompletableFuture<byte[]> getBytesAsync(){
+            return CompletableFuture.supplyAsync(this::getBytes,HTTPS_EXECUTOR);
         }
 
         public CompletableFuture<?> saveAsync(){
