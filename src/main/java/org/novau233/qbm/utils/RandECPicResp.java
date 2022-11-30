@@ -27,7 +27,7 @@ public class RandECPicResp {
             connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             connection.connect();
             if (connection.getResponseCode() == 200){
-                byte[] buffer = readInputStream(connection.getInputStream());
+                byte[] buffer = Utils.readInputStreamToByte(connection.getInputStream());
                 String read = new String(buffer);
                 connection.disconnect();
                 return GSON.fromJson(read, RandECPicResp.class);
@@ -53,17 +53,6 @@ public class RandECPicResp {
         }
     }
 
-    public static byte[] readInputStream(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte['Ѐ'];
-        int len;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = inputStream.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.close();
-        return bos.toByteArray();
-    }
-
     public void saveToFile(File parent,String name){
         try{
             File file = new File(parent,name);
@@ -77,7 +66,7 @@ public class RandECPicResp {
             connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             connection.connect();
             if (connection.getResponseCode() == 200){
-                byte[] buffer = readInputStream(connection.getInputStream());
+                byte[] buffer = Utils.readInputStreamToByte(connection.getInputStream());
                 connection.disconnect();
                 FileOutputStream stream = new FileOutputStream(file);
                 stream.write(buffer);
@@ -97,7 +86,7 @@ public class RandECPicResp {
             connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             connection.connect();
             if (connection.getResponseCode() == 200){
-                byte[] buffer = readInputStream(connection.getInputStream());
+                byte[] buffer = Utils.readInputStreamToByte(connection.getInputStream());
                 connection.disconnect();
                 return buffer;
             }

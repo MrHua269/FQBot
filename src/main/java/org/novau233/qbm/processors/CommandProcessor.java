@@ -1,7 +1,6 @@
 package org.novau233.qbm.processors;
 
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.apache.logging.log4j.LogManager;
@@ -49,17 +48,24 @@ public class CommandProcessor {
             final String[] args = new String[fixed.length-1];
             System.arraycopy(fixed, 1, args, 0, fixed.length - 1);
             if (commandHead.startsWith("#") && commandHead.length() > 1){
-                for (Command command : CommandManager.registedCommands){
-                    if (command.getHead().equals(commandHead.substring(1)) && event.getGroup().getId() == ConfigManager.CONFIG_FILE_READ.getListeningGroup()){
-                        logger.info("Command caught:{} Args:{}",command.getHead(), Arrays.toString(args));
-                        try{
-                            command.process(args,event.getBot(),event.getGroup(),event);
-                        }catch (Exception e){
-                            event.getGroup().sendMessage("Error in processing message!");
-                            event.getGroup().sendMessage(e.getMessage());
-                        }
-                    }
+                for (Command command : CommandManager.registedSystemCommands){
+                    checkAndCall(command,commandHead,event,args);
                 }
+                for (Command jsCommand : JavaScriptCommandLoader.getRegistedJSCommands()){
+                    checkAndCall(jsCommand,commandHead,event,args);
+                }
+            }
+        }
+    }
+
+    private static void checkAndCall(Command command,String commandHead,GroupMessageEvent event,String[] args){
+        if (command.getHead().equals(commandHead.substring(1)) && event.getGroup().getId() == ConfigManager.CONFIG_FILE_READ.getListeningGroup()){
+            logger.info("Command caught:{} Args:{}",command.getHead(), Arrays.toString(args));
+            try{
+                command.process(args,event.getBot(),event.getGroup(),event);
+            }catch (Exception e){
+                event.getGroup().sendMessage("Error in processing message!");
+                event.getGroup().sendMessage(e.getMessage());
             }
         }
     }

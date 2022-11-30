@@ -5,12 +5,13 @@ import org.novau233.qbm.commands.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 public class CommandManager {
-    public static final Set<Command> registedCommands = ConcurrentHashMap.newKeySet();
+    public static final Set<Command> registedSystemCommands = ConcurrentHashMap.newKeySet();
 
     static{
-        registedCommands.add(new TestCommand());
-        registedCommands.add(new ScheduleCommand());
-        registedCommands.add(new RandomPicCommand());
-        registedCommands.add(new GetOutCommand());
+        registedSystemCommands.add(new TestCommand());
+        registedSystemCommands.add(new ScheduleCommand());
+        registedSystemCommands.add(new RandomPicCommand());
+        registedSystemCommands.add(new GetOutCommand());
+        registedSystemCommands.add(new ReloadCommand());
     }
 }

@@ -20,6 +20,17 @@ public class Utils {
         return new ByteArrayInputStream(bos.toByteArray());
     }
 
+    public static byte[] readInputStreamToByte(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte['Ѐ'];
+        int len;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
     public static Member searchMember(Group group,String nickName){
         for (Member member : group.getMembers()){
             if (member.getNameCard().equals(nickName)){
