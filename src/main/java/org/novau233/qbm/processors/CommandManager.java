@@ -1,9 +1,7 @@
 package org.novau233.qbm.processors;
 
-import org.novau233.qbm.commands.Command;
-import org.novau233.qbm.commands.RandomPicCommand;
-import org.novau233.qbm.commands.ScheduleCommand;
-import org.novau233.qbm.commands.TestCommand;
+import org.novau233.qbm.commands.*;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 public class CommandManager {
@@ -13,5 +11,6 @@ public class CommandManager {
         registedCommands.add(new TestCommand());
         registedCommands.add(new ScheduleCommand());
         registedCommands.add(new RandomPicCommand());
+        registedCommands.add(new GetOutCommand());
     }
 }

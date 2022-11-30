@@ -41,19 +41,32 @@ public class RandomPicCommand implements Command{
             LogManager.getLogger().error(e);
         }
 
+        boolean flag = true;
+
         try{
             if (response.getData().length > 0){
                 SeXResponse.Data[] dataArray = response.getData();
                 for (SeXResponse.Data data : dataArray){
-                    ByteArrayInputStream stream = new ByteArrayInputStream(data.urls.getBytes());
-                    Contact.sendImage(target,stream);
+                    try {
+                        ByteArrayInputStream stream = new ByteArrayInputStream(data.urls.getBytes());
+                        Contact.sendImage(target,stream);
+                    }catch (Exception e){
+                        builder.add("API Time out.Please try again"+"\n");
+                        builder.add("API连接超时,请重试");
+                        e.printStackTrace();
+                        flag = false;
+                    }
                 }
             }else{
                 builder.add("指定图片未找到");
+                flag = false;
+            }
+            if (flag){
+                return;
             }
         }catch (Exception e){
-            builder.add("API Time out.Please try again"+"\n");
-            builder.add("API连接超时,请重试");
+            e.printStackTrace();
         }
+        multiSender.send(builder.build(), target.getId());
     }
 }

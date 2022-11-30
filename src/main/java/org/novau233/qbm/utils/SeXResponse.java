@@ -92,8 +92,8 @@ public class SeXResponse {
                 final URL url = new URL(this.original);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("User-Agent", getRandomUserAgent());
-                connection.setReadTimeout(3000);
-                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(30000);
+                connection.setConnectTimeout(30000);
                 connection.connect();
                 try{
                     if (connection.getResponseCode() == 200){
