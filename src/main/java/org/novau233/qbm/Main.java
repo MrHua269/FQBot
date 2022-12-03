@@ -2,6 +2,7 @@ package org.novau233.qbm;
 
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.novau233.qbm.commands.JavaScriptCommand;
+import org.novau233.qbm.manager.BotDataManager;
 import org.novau233.qbm.manager.BotManager;
 import org.novau233.qbm.manager.ConfigManager;
 import org.novau233.qbm.processors.JavaScriptCommandLoader;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        BotDataManager.init();
         if (SeXResponse.URLs.getCache().exists()){
             for (File file : SeXResponse.URLs.getCache().listFiles()){
                 file.delete();

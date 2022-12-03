@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Woc2Util {
-    public static List<String> getNewWocPicList(){
+    public static List<String> getNewWocPicList(int page){
         try {
-            String json = new String(Utils.getBytes("https://yingtall.com/wp-json/wp/v2/posts?page=1"));
+            String json = new String(Utils.getBytes("https://yingtall.com/wp-json/wp/v2/posts?page="+page));
             String[] split = json.split("src=");
             List<String> done = new ArrayList<>();
             int counter = 0;

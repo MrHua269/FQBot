@@ -18,7 +18,7 @@ public class CommandProcessor {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicReference<Bot> currentListener = new AtomicReference<>();
     private static final AtomicInteger threadCounter = new AtomicInteger();
-    private static final Executor processor = Executors.newCachedThreadPool(task -> {
+    public static final Executor processor = Executors.newCachedThreadPool(task -> {
         Thread worker = new Thread(task,"fqbot-pool-worker-"+threadCounter.getAndIncrement());
         worker.setDaemon(true);
         worker.setPriority(3);

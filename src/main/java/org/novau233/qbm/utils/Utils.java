@@ -46,6 +46,7 @@ public class Utils {
 
     public static byte[] getBytes(String url1){
         try{
+            LogManager.getLogger().info("Downloading:{}",url1);
             final URL url = new URL(url1);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("User-Agent", getRandomUserAgent());
