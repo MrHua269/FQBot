@@ -13,5 +13,7 @@ public class CommandManager {
         registedSystemCommands.add(new RandomPicCommand());
         registedSystemCommands.add(new GetOutCommand());
         registedSystemCommands.add(new ReloadCommand());
+        registedSystemCommands.add(new RandomPic2Command());
+        registedSystemCommands.add(new Random3PicCommand());
     }
 }

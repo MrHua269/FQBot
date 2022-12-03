@@ -48,8 +48,12 @@ public class RandomPicCommand implements Command{
                 SeXResponse.Data[] dataArray = response.getData();
                 for (SeXResponse.Data data : dataArray){
                     try {
-                        ByteArrayInputStream stream = new ByteArrayInputStream(data.urls.getBytes());
-                        Contact.sendImage(target,stream);
+                        if (!data.r18) {
+                            ByteArrayInputStream stream = new ByteArrayInputStream(data.urls.getBytes());
+                            Contact.sendImage(target, stream);
+                        }else{
+                            target.sendMessage(data.urls.original);
+                        }
                     }catch (Exception e){
                         builder.add("API Time out.Please try again"+"\n");
                         builder.add("API连接超时,请重试");

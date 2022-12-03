@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.novau233.qbm.utils.SeXResponse.getRandomUserAgent;
+import static org.novau233.qbm.utils.Utils.getRandomUserAgent;
 
 public class FunUtils {
     private static final String GET_OUT_API = "http://api.tangdouz.com/wz/pa.php?q=";
