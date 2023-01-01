@@ -12,7 +12,7 @@ import static org.novau233.qbm.utils.Utils.getRandomUserAgent;
 import static org.novau233.qbm.utils.Utils.readInputStreamToByte;
 
 public class SeXResponse {
-    private static final String API_URL = "https://api.lolicon.app/setu/v2";
+    private static final String API_URL = "https://api.lolicon.app/setu/v2?proxy=i.pixiv.cat";
     private static final Gson gson = new Gson();
 
     private static final AtomicInteger threadId = new AtomicInteger();
